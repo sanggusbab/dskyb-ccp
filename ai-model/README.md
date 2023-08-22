@@ -16,3 +16,5 @@
 	Sang Min, Lee
 	Mobile. +82-10-2846-2327
 	Email. sanggusbab@gmail.com
+
+	"I've updated my new branch {feature/juyeon} on this branch"
