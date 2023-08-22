@@ -16,5 +16,13 @@
 	Sang Min, Lee
 	Mobile. +82-10-2846-2327
 	Email. sanggusbab@gmail.com
-
-	"I've updated my new branch {feature/juyeon} on this branch"
+	----------------------------------------------------------------
+	- Dependancy
+	Node.js(version 16.20.2): https://nodejs.org/en/download/releases
+	----------------------------------------------------------------
+	- cli command
+	npm install -g create-react-app
+	npx create-react-app my-app
+	cd my-app
+	npm install
+	npm start
