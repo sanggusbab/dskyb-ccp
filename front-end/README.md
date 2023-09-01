@@ -23,5 +23,4 @@
 	- cli commend
 	npm install socket.io@4
 	npm install express@4
-	npm audit fix --force
 	npm install ejs
