@@ -1,0 +1,41 @@
+# 개발 환경 파일 및 디렉토리
+node_modules/
+npm-debug.log
+yarn-error.log
+.env
+
+# 빌드 및 임시 파일
+/build/
+/dist/
+/tmp/
+
+# 개발 도구 설정 파일
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# 로그 및 캐시 파일
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.pnpm-workspace.yaml
+npm-session.*
+yarn-session.*
+
+# 환경 구성 파일
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 프로젝트 종속성 캐시 및 패키지 잠금 파일
+.pnp/
+.pnp.js
+yarn.lock

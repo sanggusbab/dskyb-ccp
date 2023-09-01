@@ -18,11 +18,10 @@
 	Email. sanggusbab@gmail.com
 	----------------------------------------------------------------
 	- Dependancy
-	Node.js(version 16.20.2): https://nodejs.org/en/download/releases
+	Node.js: https://nodejs.org/en/download/releases
 	----------------------------------------------------------------
-	- cli command
-	npm install -g create-react-app
-	npx create-react-app my-app
-	cd my-app
-	npm install
-	npm start
+	- cli commend
+	npm install socket.io@4
+	npm install express@4
+	npm audit fix --force
+	npm install ejs
