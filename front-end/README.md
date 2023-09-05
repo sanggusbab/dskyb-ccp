@@ -16,20 +16,13 @@
 	Sang Min, Lee
 	Mobile. +82-10-2846-2327
 	Email. sanggusbab@gmail.com
-
-	+Members
-	Ju Hyun, Lee
-	Mobile. 000-000-0000
-
-	Ga Eun, Heo
-	Mobile. +82-10-8498-6263
-	Email. hge2020@korea.ac.kr
 	----------------------------------------------------------------
-	version is 0.0.0 (cf. it is only start file)
+	- Dependancy
+	Node.js(version 16.20.2): https://nodejs.org/en/download/releases
 	----------------------------------------------------------------
-	- git tips
-	- [출처] https://medium.com/@joongwon/git-git-%EB%AA%85%EB%A0%B9%EC%96%B4-%EC%A0%95%EB%A6%AC-c25b421ecdbd
-	---------------------------------------------------------------
-	- Teammates
-	** JUYEONSHIM **
-	** SangMin, Lee **
+	- cli command
+	npm install -g create-react-app
+	npx create-react-app my-app
+	cd my-app
+	npm install
+	npm start
