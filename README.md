@@ -25,11 +25,5 @@
 	Mobile. +82-10-8498-6263
 	Email. hge2020@korea.ac.kr
 	----------------------------------------------------------------
-	version is 0.0.0 (cf. it is only start file)
-	----------------------------------------------------------------
 	- git tips
 	- [출처] https://medium.com/@joongwon/git-git-%EB%AA%85%EB%A0%B9%EC%96%B4-%EC%A0%95%EB%A6%AC-c25b421ecdbd
-	---------------------------------------------------------------
-	- Teammates
-	** JUYEONSHIM **
-	** SangMin, Lee **
