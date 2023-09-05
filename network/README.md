@@ -17,4 +17,12 @@
 	Mobile. +82-10-2846-2327
 	Email. sanggusbab@gmail.com
 
+	+Members
+	Ju Hyun, Lee
+	Mobile. 000-000-0000
+	
     koo:hello
+
+	Ga Eun, Heo
+	Mobile. +82-10-8498-6263
+	Email. hge2020@korea.ac.kr
