@@ -20,6 +20,10 @@
 	+Members
 	Ju Hyun, Lee
 	Mobile. 000-000-0000
+
+	Ga Eun, Heo
+	Mobile. +82-10-8498-6263
+	Email. hge2020@korea.ac.kr
 	----------------------------------------------------------------
 	- git tips
 	- [출처] https://medium.com/@joongwon/git-git-%EB%AA%85%EB%A0%B9%EC%96%B4-%EC%A0%95%EB%A6%AC-c25b421ecdbd
