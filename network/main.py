@@ -5,8 +5,13 @@ from schemas import Sch_AssignmentTbl#, Sch_RouteTbl
 from pydantic import BaseModel
 from starlette.responses import JSONResponse
 
-
 app = FastAPI()
+
+from routers import server
+app.include_router(server.router)
+
+from routers import client
+app.include_router(client.router)
 
 engine = engineconn()
 session = engine.sessionmaker()
