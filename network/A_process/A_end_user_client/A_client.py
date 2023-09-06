@@ -8,12 +8,12 @@ async def A_client(num):
         response = await client.post("http://localhost:8000/", json=data)
         print("POST 요청 응답:", response.json())
 
-def run():
+def A_run():
     import asyncio
     while True:
-        num = input("숫자와 입력하세요: ")
+        num = input("숫자를 입력하세요: ") 
         asyncio.run(A_client(num))
 
 
 if __name__ == "__main__":
-    run()
+    A_run()
