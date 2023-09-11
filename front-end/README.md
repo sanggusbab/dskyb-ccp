@@ -16,13 +16,12 @@
 	Sang Min, Lee
 	Mobile. +82-10-2846-2327
 	Email. sanggusbab@gmail.com
-	----------------------------------------------------------------
-	- Dependancy
-	Node.js(version 16.20.2): https://nodejs.org/en/download/releases
-	----------------------------------------------------------------
-	- cli command
-	npm install -g create-react-app
-	npx create-react-app my-app
-	cd my-app
-	npm install
-	npm start
+	
+	-----------------------------------------
+	- cli command (server)
+	npm install express
+	npm install cors
+
+	- cli command (web)
+	npm install react-router-dom
+	npm install express
