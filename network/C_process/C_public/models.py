@@ -6,12 +6,12 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 metadata = Base.metadata
 
-class available_edge_device_tbl(Base):
-    __tablename__ = 'available_edge_device_tbl'
+class tbl1(Base):
+    __tablename__ = 'tbl1'
 
     index = Column(INTEGER(11), primary_key=True)
-    device_id = Column(INTEGER(11))
-    rect_top = Column(FLOAT)
-    rect_bottom = Column(FLOAT)
+    edge_id = Column(INTEGER(11))
     rect_left = Column(FLOAT)
+    rect_top = Column(FLOAT)
     rect_right = Column(FLOAT)
+    rect_bottom = Column(FLOAT)
