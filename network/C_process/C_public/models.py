@@ -1,5 +1,5 @@
 # coding: utf-8
-from sqlalchemy import CHAR, Column
+from sqlalchemy import Column, Float
 from sqlalchemy.dialects.mysql import INTEGER
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -11,8 +11,8 @@ class tbl(Base):
 
     index = Column(INTEGER(11), primary_key=True)
     task_id = Column(INTEGER(11))
-    position_x = Column(FLOAT)
-    position_y = Column(FLOAT)
+    position_x = Column(Float)
+    position_y = Column(Float)
 
 
 class edge(Base):
@@ -20,5 +20,5 @@ class edge(Base):
 
     index = Column(INTEGER(11), primary_key=True)
     edge_id = Column(INTEGER(11))
-    edge_x = Column(FLOAT)
-    edge_y = Column(FLOAT)
+    edge_x = Column(Float)
+    edge_y = Column(Float)

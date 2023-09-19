@@ -2,7 +2,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-DB_URL = 'mysql+pymysql://root:1477@127.0.0.1:3306/dksybdb'
+DB_URL = 'mysql+pymysql://root:1477@127.0.0.1:3306/c_process'
 
 class engineconn:
     def __init__(self):
