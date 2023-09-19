@@ -6,7 +6,7 @@ import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 from C_public import database #import engineconn
-from C_public import models #import tbl1
+from C_public import models #import tbl
 
 engine = database.engineconn()
 session = engine.sessionmaker()
@@ -14,32 +14,29 @@ conn = engine.connection()
 
 app = FastAPI()
 
-class Item1(BaseModel):
+
+class Item(BaseModel):
     task_id = int
     position_x = float
     position_y = float
 
-class Item2(BaseModel):
-    index = int
-    edge_id = int
-    rect_left = float
-    rect_top = float
-    rect_right = float
-    rect_bottom = float
-
-
-# 파일에 데이터를 추가하는 함수
-def append_to_file(item):
-    with open("../C_public/example.txt", "a") as file: # TODO: you need to change when setting server sample script
-        file.write(str(item.number) + "\n")
-        file.close()
 
 # 파일 접근을 동기화하기 위한 Lock 객체 생성
 file_lock = threading.Lock()
 
 
 @app.post("/request")
-async def C1_server(item: Item1): # TODO: you need to change when setting server sample script
+async def C1_server(item: Item): # TODO: you need to change when setting server sample script
+
+    # edge 좌표 정보
+    edge = [
+        {"x": 1, "y": 4, "value": "A"},
+        {"x": 5, "y": 5, "value": "B"},
+        {"x": 1, "y": 1, "value": "C"},
+        {"x": 2, "y": -7, "value": "D"},
+        {"x": -6, "y": 3, "value": "E"},
+    ]
+
     rect_left = item.position_x - 2
     rect_bottom = item.position_y - 2
     rect_right = item.position_x + 2
@@ -64,9 +61,11 @@ async def C1_server(item: Item1): # TODO: you need to change when setting server
     for item in result:
         print(f"x: {item['x']}, y: {item['y']}, value: {item['value']}")
 
-    with file_lock:
-        append_to_file(item)
-    return item
+    data = models.edge(edge_id = item.value, edge_x = item.x, edge_y = item.y)
+
+    session.add(data)
+    session.commit()
+    return 'success'
 
 
 def C1_run(): # TODO: you need to change when setting server sample script
