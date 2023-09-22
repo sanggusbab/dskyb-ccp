@@ -63,7 +63,7 @@ async def C1_server(item: Item): # TODO: you need to change when setting server 
     for item in result:
         print(f"x: {item['x']}, y: {item['y']}, value: {item['value']}")
 
-    data = models.edge(edge_id = item.value, edge_x = item.x, edge_y = item.y)
+    data = models.C1(device_id = item.value)
 
     session.add(data)
     session.commit()
