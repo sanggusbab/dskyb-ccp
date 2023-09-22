@@ -16,11 +16,11 @@ app = FastAPI()
 
 
 class Item(BaseModel):
-    task_group: int
-    location_x: float
-    location_y: float
-    motion_code: int
-    task_subgroup_code: int = 1
+    task_subgroup_code: int
+    # task_group: int
+    # location_x: float
+    # location_y: float
+    # motion_code: int
 
 
 # 파일 접근을 동기화하기 위한 Lock 객체 생성
@@ -30,46 +30,50 @@ file_lock = threading.Lock()
 @app.post("/request")
 async def C1_server(item: Item): # TODO: you need to change when setting server sample script
 
+
+    tabledata = session.query(models.subgroup_detail_tbl).filter(models.subgroup_detail_tbl.task_subgroup_code == '1').all()
+    print(tabledata)
+    # for i in tabledata:
+    #     print(i.location_x)
+
     # edge 좌표 정보
-    edge = [
-        {"x": 1, "y": 4, "value": "1"},
-        {"x": 5, "y": 5, "value": "2"},
-        {"x": -1, "y": 1, "value": "3"},
-        {"x": 2, "y": 4, "value": "4"},
-        {"x": -6, "y": 3, "value": "5"},
-    ]
+    # edge = [
+    #     {"x": 1, "y": 4, "value": "1"},
+    #     {"x": 5, "y": 5, "value": "2"},
+    #     {"x": -1, "y": 1, "value": "3"},
+    #     {"x": 2, "y": 4, "value": "4"},
+    #     {"x": -6, "y": 3, "value": "5"},
+    # ]
 
-    rect_left = item.location_x - 2.0    
-    rect_bottom = item.location_y - 2.0
-    rect_right = item.location_x + 2.0
-    rect_top = item.location_y + 2.0
+    # rect_left = item.location_x - 2.0    
+    # rect_bottom = item.location_y - 2.0
+    # rect_right = item.location_x + 2.0
+    # rect_top = item.location_y + 2.0
     
-    x1, y1, x2, y2 = rect_left, rect_bottom, rect_right, rect_top
+    # x1, y1, x2, y2 = rect_left, rect_bottom, rect_right, rect_top
 
-    # 영역 안에 있는 edge를 찾는 함수
-    def find_edge_in_area(edge, x1, y1, x2, y2):
-        result = []
-        for item in edge:
-            x, y = item["x"], item["y"]
-            if x1 <= x <= x2 and y1 <= y <= y2:
-                result.append(item)
-        return result
+    # # 영역 안에 있는 edge를 찾는 함수
+    # def find_edge_in_area(edge, x1, y1, x2, y2):
+    #     result = []
+    #     for item in edge:
+    #         x, y = item["x"], item["y"]
+    #         if x1 <= x <= x2 and y1 <= y <= y2:
+    #             result.append(item)
+    #     return result
 
-    # 영역 안에 있는 데이터 찾기
-    result = find_edge_in_area(edge, x1, y1, x2, y2)
+    # # 영역 안에 있는 데이터 찾기
+    # result = find_edge_in_area(edge, x1, y1, x2, y2)
 
-    # 결과 출력
-    print("주변에 있는 드론 정보:")
-    for item in result:
-        print(f"x: {item['x']}, y: {item['y']}, value: {item['value']}")
+    # # 결과 출력
+    # print("주변에 있는 드론 정보:")
+    # for i in result:
+    #     print(f"x: {i['x']}, y: {i['y']}, value: {i['value']}")
+    #     data = models.C1(
+    #     device_id = i.get("value"), task_subgroup_code=item.task_subgroup_code
+    #     )
+    #     session.add(data)
 
-    data = models.C1(
-        device_id=item.get("value"),
-        task_subgroup_code=item.get("task_subgroup_code")
-    )
-
-    session.add(data)
-    session.commit()
+    # session.commit()
     return 'success'
 
 
