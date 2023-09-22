@@ -32,11 +32,11 @@ async def C1_server(item: Item): # TODO: you need to change when setting server 
 
     # edge 좌표 정보
     edge = [
-        {"x": 1, "y": 4, "value": "A"},
-        {"x": 5, "y": 5, "value": "B"},
-        {"x": 1, "y": 1, "value": "C"},
-        {"x": 2, "y": -7, "value": "D"},
-        {"x": -6, "y": 3, "value": "E"},
+        {"x": 1, "y": 4, "value": "1"},
+        {"x": 5, "y": 5, "value": "2"},
+        {"x": 1, "y": 1, "value": "3"},
+        {"x": 2, "y": -7, "value": "4"},
+        {"x": -6, "y": 3, "value": "5"},
     ]
 
     rect_left = item.location_x - 2
