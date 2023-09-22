@@ -6,7 +6,7 @@ import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 from C_public import database #import engineconn
-from C_public import models #import tbl
+from C_public import models #import B2, C1
 
 engine = database.engineconn()
 session = engine.sessionmaker()
@@ -16,9 +16,11 @@ app = FastAPI()
 
 
 class Item(BaseModel):
-    task_id = int
-    position_x = float
-    position_y = float
+    task_group = int
+    location_x = float
+    location_y = float
+    motion_code = int
+    task_subgroup_code = int
 
 
 # 파일 접근을 동기화하기 위한 Lock 객체 생성
@@ -37,10 +39,10 @@ async def C1_server(item: Item): # TODO: you need to change when setting server 
         {"x": -6, "y": 3, "value": "E"},
     ]
 
-    rect_left = item.position_x - 2
-    rect_bottom = item.position_y - 2
-    rect_right = item.position_x + 2
-    rect_top = item.position_y + 2
+    rect_left = item.location_x - 2
+    rect_bottom = item.location_y - 2
+    rect_right = item.location_x + 2
+    rect_top = item.location_y + 2
     
     x1, y1, x2, y2 = rect_left, rect_bottom, rect_right, rect_top
 
