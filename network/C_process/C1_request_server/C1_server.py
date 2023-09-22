@@ -16,11 +16,11 @@ app = FastAPI()
 
 
 class Item(BaseModel):
-    task_group = int
-    location_x = float
-    location_y = float
-    motion_code = int
-    task_subgroup_code = int
+    task_group: int
+    location_x: float
+    location_y: float
+    motion_code: int
+    task_subgroup_code: int = 1
 
 
 # 파일 접근을 동기화하기 위한 Lock 객체 생성
@@ -34,15 +34,15 @@ async def C1_server(item: Item): # TODO: you need to change when setting server 
     edge = [
         {"x": 1, "y": 4, "value": "1"},
         {"x": 5, "y": 5, "value": "2"},
-        {"x": 1, "y": 1, "value": "3"},
-        {"x": 2, "y": -7, "value": "4"},
+        {"x": -1, "y": 1, "value": "3"},
+        {"x": 2, "y": 4, "value": "4"},
         {"x": -6, "y": 3, "value": "5"},
     ]
 
-    rect_left = item.location_x - 2
-    rect_bottom = item.location_y - 2
-    rect_right = item.location_x + 2
-    rect_top = item.location_y + 2
+    rect_left = item.location_x - 2.0    
+    rect_bottom = item.location_y - 2.0
+    rect_right = item.location_x + 2.0
+    rect_top = item.location_y + 2.0
     
     x1, y1, x2, y2 = rect_left, rect_bottom, rect_right, rect_top
 
@@ -63,7 +63,10 @@ async def C1_server(item: Item): # TODO: you need to change when setting server 
     for item in result:
         print(f"x: {item['x']}, y: {item['y']}, value: {item['value']}")
 
-    data = models.C1(device_id = item.value)
+    data = models.C1(
+        device_id=item.get("value"),
+        task_subgroup_code=item.get("task_subgroup_code")
+    )
 
     session.add(data)
     session.commit()
