@@ -1,0 +1,13 @@
+# Unreal Engine 4
+Binaries/
+Build/
+DerivedDataCache/
+Intermediate/
+Saved/
+*.sln
+*.suo
+*.opensdf
+*.opendb
+*.VC.db
+*.VC.opendb 
+Debug/
