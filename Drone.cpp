@@ -11,7 +11,7 @@ ADrone::ADrone()
 
 }
 
-// Called when the game starts or when spawned
+// Called when the game starts or when spawned!
 void ADrone::BeginPlay()
 {
 	Super::BeginPlay();
