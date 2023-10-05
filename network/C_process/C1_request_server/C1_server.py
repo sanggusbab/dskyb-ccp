@@ -18,10 +18,6 @@ app = FastAPI()
 class Item(BaseModel):
     task_subgroup_code: int
 
-# test1
-# test2
-# test3
-
 # 파일 접근을 동기화하기 위한 Lock 객체 생성
 file_lock = threading.Lock()
 
