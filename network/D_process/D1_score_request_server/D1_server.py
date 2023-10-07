@@ -25,7 +25,7 @@ class Item(BaseModel):
 file_lock = threading.Lock()
 
 
-@app.post("/score")
+@app.post("/D1")
 async def D1_server(item: Item): # TODO: you need to change when setting server sample script
 
     response = session.query(models.score_request_queue_tbl).filter(models.score_request_queue_tbl.request_id == item.request_id)
