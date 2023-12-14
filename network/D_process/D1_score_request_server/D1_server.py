@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import threading
 import sys, os
+# import time
+# from datetime import datetime
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
@@ -17,6 +19,9 @@ app = FastAPI()
 
 class Item(BaseModel):
     request_id: int
+    # motion_code: int
+    # sequence: int
+    # expected_score: int
 
 # 파일 접근을 동기화하기 위한 Lock 객체 생성
 file_lock = threading.Lock()
@@ -27,17 +32,18 @@ async def D1_server(item: Item): # TODO: you need to change when setting server 
 
     response = session.query(models.score_request_queue_tbl).filter(models.score_request_queue_tbl.request_id == item.request_id)[0].task_subgroup_code
     detail_tbl = session.query(models.subgroup_detail_tbl).filter(models.subgroup_detail_tbl.task_subgroup_code == response).all()
-    
-    # AI로직 추가
-    # AI로직 추가
-    # AI로직 추가
 
-    data = models.score_tbl(
-    expected_score = expected_score, expected_time = expected_time, request_id = item.request_id
-    )
-    session.add(data)
-    session.commit()
-    return 'success'
+    for data in detail_tbl:
+
+        expected_score = data.motion_code + data.sequence # 테스트값
+        expected_time  = data.requested_start_time # 테스트값
+
+        datas = models.score_tbl(
+        expected_score = expected_score, expected_time = expected_time, request_id = item.request_id
+        )
+        session.add(datas)
+        session.commit()
+        return 'success'
 
     
 def D1_run(): # TODO: you need to change when setting server sample script

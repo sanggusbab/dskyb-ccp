@@ -28,7 +28,7 @@ async def C1_server(item: Item): # TODO: you need to change when setting server 
     # 영역 안에 있는 edge를 찾는 함수
     def find_edge_in_area(devices, x, y, motion_code):
         device_ids = []
-        for device in devices:
+        for device in devices:  
             if (int(device.motion_code) == motion_code):
                 x1 = device.rect_left
                 x2 = device.rect_right

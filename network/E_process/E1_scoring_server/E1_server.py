@@ -23,7 +23,7 @@ class Item(BaseModel):
 # 파일 접근을 동기화하기 위한 Lock 객체 생성
 file_lock = threading.Lock()
 
-@app.post("/E1_server")
+@app.post("/E1")
 async def E1_server(item: Item): # TODO: you need to change when setting server sample script
 
     response = session.query(models.score_request_queue_tbl).filter(models.score_request_queue_tbl.request_id == item.request_id)
