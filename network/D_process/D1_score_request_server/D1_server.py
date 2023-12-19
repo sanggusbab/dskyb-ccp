@@ -19,9 +19,7 @@ app = FastAPI()
 
 class Item(BaseModel):
     request_id: int
-    # motion_code: int
-    # sequence: int
-    # expected_score: int
+
 
 # 파일 접근을 동기화하기 위한 Lock 객체 생성
 file_lock = threading.Lock()
@@ -30,8 +28,8 @@ file_lock = threading.Lock()
 @app.post("/D1")
 async def D1_server(item: Item): # TODO: you need to change when setting server sample script
 
-    response = session.query(models.score_request_queue_tbl).filter(models.score_request_queue_tbl.request_id == item.request_id)[0].task_subgroup_code
-    detail_tbl = session.query(models.subgroup_detail_tbl).filter(models.subgroup_detail_tbl.task_subgroup_code == response).all()
+    task_subgroup_code = session.query(models.score_request_queue_tbl).filter(models.score_request_queue_tbl.request_id == item.request_id)[0].task_subgroup_code
+    detail_tbl = session.query(models.subgroup_detail_tbl).filter(models.subgroup_detail_tbl.task_subgroup_code == task_subgroup_code).all()
 
     for data in detail_tbl:
 
