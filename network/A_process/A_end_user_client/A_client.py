@@ -1,5 +1,8 @@
 import httpx
 
+#A는 단지 사이트가 제대로 동작하는지 테스트만 할 수 있으면 됨.
+#실제에서는 유저가 웹을 통해 request를 보낼것이기 때문에, code로 request를 raise할 필요 없음.
+
 # 비동기 클라이언트 생성
 async def A_client(num):
     async with httpx.AsyncClient() as client:
