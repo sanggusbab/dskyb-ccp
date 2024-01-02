@@ -30,19 +30,19 @@ async def B2_client():
         i = data_list.pop(0)
 
 
-        print(i)
+        print(i) #TODO :여기에 db insert 로직 작성 예정
 
-        
+
         json_data["data"] = data_list
         with open("../B_public/data.json", "w") as file:
             json.dump(json_data, file, default=str)
 
 
-def B2_run(): # TODO: you need to change when setting server sample script
+def B2_run():
     import asyncio
     while True:
-        asyncio.run(B2_client()) # TODO: you need to change when setting server sample script
+        asyncio.run(B2_client())
 
 
 if __name__ == "__main__":
-    B2_run() # TODO: you need to change when setting server sample script
+    B2_run()
