@@ -44,7 +44,7 @@ async def E1_server(item: Item): # TODO: you need to change when setting server 
             task_group
         )
 
-        take_yn = 'y'
+        take_yn = 'n'
 
         datas = models.assignment_tbl(
         device_id = item.device_id, task_subgroup_code = data.task_subgroup_code, take_yn = take_yn
@@ -52,12 +52,6 @@ async def E1_server(item: Item): # TODO: you need to change when setting server 
         session.add(datas)
         session.commit()
         return 'success'
-
-
-
-
-
-
 
 
 def E1_run(): # TODO: you need to change when setting server sample script
