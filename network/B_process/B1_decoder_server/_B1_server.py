@@ -1,3 +1,4 @@
+from msilib import sequence
 from fastapi import FastAPI
 from pydantic import BaseModel
 from datetime import datetime
@@ -13,6 +14,8 @@ class Item(BaseModel):
     location_y: float
     start_time: datetime
     user_id: int
+    task_id: int
+    task_group: int
 
 # 파일에 데이터를 추가하는 함수
 def append_to_file(data):

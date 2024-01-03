@@ -22,26 +22,36 @@ import json
 #             response = await client.post("http://localhost:8001/", json=data) # TODO: you need to change when setting server sample script
 #             print("POST 요청 응답:", response.json())
 
-async def B2_client():
+def parse(request):
+    requests = request.split(",")
+    #DB나 다른데서 모션코드 찾아서 변환해줘야함.
+
+
+async def B2_client(subgroup_code):
     with open("../B_public/data.json", "r") as json_file:
         json_data = json.load(json_file)
     data_list = json_data["data"]
     if not len(data_list) == 0:
-        i = data_list.pop(0)
-
-
-        print(i) #TODO :여기에 db insert 로직 작성 예정
-
-
+        data = data_list.pop(0)
+        subgroup_code += 1
+        motion_codes = parse(data.request)
+        for i, code in motion_codes:
+            """subgroup_detail_data : task_subgroup_code = 1, location_x = data.location_x, location_y = data.location_y, motion_code = code, sequence = i+1, requested_start_time = data.start_time"""
+        print(data)
+        """
+        subgroup_info_data : task_id  = data.task_id, task_group = data.task_group, task_subgroup_code = subgroup_code, user_id = data.user_id
+        """
         json_data["data"] = data_list
         with open("../B_public/data.json", "w") as file:
             json.dump(json_data, file, default=str)
+    return subgroup_code
 
 
 def B2_run():
+    subgroup_code = 0
     import asyncio
     while True:
-        asyncio.run(B2_client())
+        asyncio.run(subgroup_code = B2_client(subgroup_code))
 
 
 if __name__ == "__main__":
