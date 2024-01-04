@@ -27,7 +27,7 @@ class AvailableEdgeDeviceTbl(Base):
     rect_top = Column(Float, nullable=False)
     rect_right = Column(Float, nullable=False)
     rect_bottom = Column(Float, nullable=False)
-    motion_code = Column(CHAR(4), nullable=False)
+    motion_code = Column(Integer, nullable=False)
     insrt_ts = Column(TIMESTAMP, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     updt_ts = Column(TIMESTAMP, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 

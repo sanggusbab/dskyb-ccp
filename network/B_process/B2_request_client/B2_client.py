@@ -1,7 +1,5 @@
-from msilib import sequence
 import httpx
 import json
-from pydantic import BaseModel
 import sys, os
 
 #다른 폴더로 분리한 파일 가져오기위함.
