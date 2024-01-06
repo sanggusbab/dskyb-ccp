@@ -78,9 +78,9 @@ async def C2_client(device): # TODO: you need to change when setting server samp
         print(available_edge)
 
         for i in available_edge:
-            # data_detail = models.ScoreRequestQueueTbl(task_subgroup_code = code, device_id = i)
-            # session.add(data_detail)
-            # session.commit()
+            data_detail = models.ScoreRequestQueueTbl(task_subgroup_code = code, device_id = i)
+            session.add(data_detail)
+            session.commit()
             id = session.query(models.ScoreRequestQueueTbl).filter((models.ScoreRequestQueueTbl.task_subgroup_code == code)&(models.ScoreRequestQueueTbl.device_id == i)).first().request_id
             print(id)
 
