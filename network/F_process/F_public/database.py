@@ -1,3 +1,4 @@
+# 기존에 존재하는 database를 sqlalchemy를 이용해 연결해주는 파일
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from urllib.parse import quote
