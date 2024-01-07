@@ -1,57 +1,45 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import threading
-import sys, os
-# import time
-# from datetime import datetime
+from datetime import datetime
 
-sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+import json
 
-from E_public import database #import engineconn
-from E_public import models #import tbl
-
-engine = database.engineconn()
-session = engine.sessionmaker()
-conn = engine.connection()
+#서버가 음 스코어들이 이렇게나왔으니
+#이 디바이스는 이 태스크 이 디바이스는 이 태스크를 수행하렴 하고 시키는것
+#D2에서 타임, 스코어, 태스크 주면 E1에서 디바이스에 할당하도록 할까요?
 
 app = FastAPI()
 
-
 class Item(BaseModel):
-    device_id: int
+    expected_score: int
+    expected_time: datetime
+    task_subgroup_code: int
 
 
 # 파일 접근을 동기화하기 위한 Lock 객체 생성
 file_lock = threading.Lock()
 
+# 파일에 데이터를 추가하는 함수
+def append_to_file(data):
+    with open("../E_public/data.json", "r") as json_file:
+        json_data = json.load(json_file)
+    json_data['data'].append(data)
+    print(json_data)
+    with open("../E_public/data.json", "w") as file: # TODO: you need to change when setting server sample script
+        json.dump(json_data, file, default=str)
 
-@app.post("/E1")
+@app.get("/")
+def root():
+    return {"hello this is World Time CRUD API!!!"}
+
+@app.post("/")
 async def E1_server(item: Item): # TODO: you need to change when setting server sample script
-
-    score_request_queue_tbl = session.query(models.score_request_queue_tbl).filter(models.score_request_queue_tbl.device_id == item.device_id).all()
-
-    for data in score_request_queue_tbl:
-
-        expected_score = session.query(models.score_tbl).filter(models.score_tbl.request_id == data.request_id)[0].expected_score
-        expected_time = session.query(models.score_tbl).filter(models.score_tbl.request_id == data.request_id)[0].expected_time
-        task_id = session.query(models.subgroup_info_tbl).filter(models.subgroup_info_tbl.task_subgroup_code == data.task_subgroup_code)[0].task_id
-        task_group = session.query(models.subgroup_info_tbl).filter(models.subgroup_info_tbl.task_subgroup_code == data.task_subgroup_code)[0].task_group
-    
-        print(
-            expected_score,
-            expected_time,
-            task_id,
-            task_group
-        )
-
-        take_yn = 'n'
-
-        datas = models.assignment_tbl(
-        device_id = item.device_id, task_subgroup_code = data.task_subgroup_code, take_yn = take_yn
-        )
-        session.add(datas)
-        session.commit()
-        return 'success'
+    data = {
+    "expected_score":item.expected_score, "expected_time":item.expected_time, "task_subgroup_code":item.task_subgroup_code}
+    with file_lock:
+        append_to_file(data)
+    return item
 
 
 def E1_run(): # TODO: you need to change when setting server sample script
