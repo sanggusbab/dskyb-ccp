@@ -37,10 +37,12 @@ async def E2_client(): # TODO: you need to change when setting server sample scr
         )
         session.add(datas)
         session.commit()
+        async with httpx.AsyncClient() as client:
+            response = await client.post("http://localhost:8004/", json={"device_id":device_id, "task_subgroup_code": subgroup_code})
+        print("POST 요청 응답:", response.json())
         json_data["data"] = data_list
         with open("../E_public/data.json", "w") as file:
             json.dump(json_data, file, default=str)
-        #뭐 포스트해야하지?
     return
 
 def E2_run(): # TODO: you need to change when setting server sample script

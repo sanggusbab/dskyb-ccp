@@ -1,37 +1,39 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import threading
-import sys, os
 
-sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
-
-from F_public import database
-from F_public import models
-
-engine = database.engineconn()
-session = engine.sessionmaker()
+import json
 
 app = FastAPI()
 
+my_device_id = 1
+
 class Item(BaseModel):
     device_id: int
+    task_subgroup_code: int
 
 # 파일 접근을 동기화하기 위한 Lock 객체 생성
 file_lock = threading.Lock()
 
-@app.post("/F1")
-async def F1_server(item: Item):
-    assignment_tbl = session.query(models.assignment_tbl).filter(models.assignment_tbl.device_id == item.device_id).all()
+def append_to_file(data):
+    with open("../F_public/data.json", "r") as json_file:
+        json_data = json.load(json_file)
+    json_data['data'].append(data)
+    print(json_data)
+    with open("../F_public/data.json", "w") as file: # TODO: you need to change when setting server sample script
+        json.dump(json_data, file, default=str)
 
-    for data in assignment_tbl:
-        if data.take_yn == 'n':
-            data.take_yn = 'y'
-            session.commit()
-            return '명령을 받았습니다.'
-        else:
-            return '이미 명령을 받았습니다.'
-    else:
-        return '가게를 찾을 수 없습니다.'
+@app.get("/")
+def root():
+    return {"hello this is World Time CRUD API!!!"}
+
+
+@app.post("/")
+async def E1_server(item: Item): # TODO: you need to change when setting server sample script
+    if item.device_id == my_device_id:
+        with file_lock:
+            append_to_file(item.task_subgroup_code)
+        return item
 
 def F1_run():
     import uvicorn
