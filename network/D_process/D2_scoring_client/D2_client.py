@@ -37,11 +37,8 @@ async def D2_client(): # TODO: you need to change when setting server sample scr
         )
         session.add(score_data)
         session.commit()
-        post_data = {
-        "expected_score":expected_score, "expected_time":expected_time.isoformat(), "task_subgroup_code":code
-        }
         async with httpx.AsyncClient() as client:
-            response = await client.post("http://localhost:8003/", json=post_data)
+            response = await client.post("http://localhost:8003/", json={"request_id":id})
         print("POST 요청 응답:", response.json())
         json_data["data"] = data_list
         with open("../D_public/data.json", "w") as file:
