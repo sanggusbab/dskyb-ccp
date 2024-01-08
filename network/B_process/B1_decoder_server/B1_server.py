@@ -22,19 +22,8 @@ class Item(BaseModel):
     teacher: str
     pay: bool
 
-# 파일에 데이터를 추가하는 함수
-def append_to_file(item):
-    with open("../B_public/example.txt", "a") as file: # TODO: you need to change when setting server sample script
-        file.write(str(item.number) + "\n")
-        file.close()
-
 # 파일 접근을 동기화하기 위한 Lock 객체 생성
-file_lock = threading.Lock()
-
-# main http
-@app.get("/", description="This is World Time CRUD API")
-def root():
-    return {"hello this is World Time CRUD API!!!"}
+file_lock =  threading.Lock()
 
 
 @app.post("/p_test")
