@@ -1,26 +1,37 @@
 # coding: utf-8
-from sqlalchemy import CHAR, Column
-from sqlalchemy.dialects.mysql import INTEGER
+from sqlalchemy import CHAR, Column, DateTime, Float, Integer, TIMESTAMP, Time, text
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 metadata = Base.metadata
 
+class MotionCodeInfoTbl(Base):
+    __tablename__ = 'motion_code_info_tbl'
 
-class Program(Base):
-    __tablename__ = 'program'
+    motion_code = Column(Integer, primary_key=True)
+    description = Column(CHAR(255), nullable=False)
 
-    program_cd = Column(CHAR(4), primary_key=True)
-    program = Column(CHAR(20))
-    teacher = Column(CHAR(10))
-    price = Column(INTEGER(10))
+class SubgroupDetailTbl(Base):
+    __tablename__ = 'subgroup_detail_tbl'
+
+    index = Column(Integer, primary_key=True)
+    task_subgroup_code = Column(Integer, nullable=False)
+    location_x = Column(Float, nullable=False)
+    location_y = Column(Float, nullable=False)
+    motion_code = Column(Integer, nullable=False)
+    sequence = Column(Integer, nullable=False)
+    requested_start_time = Column(DateTime)
+    insrt_ts = Column(TIMESTAMP, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
+    updt_ts = Column(TIMESTAMP, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
 
-class Register(Base):
-    __tablename__ = 'register'
+class SubgroupInfoTbl(Base):
+    __tablename__ = 'subgroup_info_tbl'
 
-    id = Column(INTEGER(5), primary_key=True)
-    user_id = Column(INTEGER(3))
-    name = Column(CHAR(10))
-    program_cd = Column(CHAR(4))
-    pay = Column(CHAR(1))
+    index = Column(Integer, primary_key=True)
+    task_id = Column(Integer, nullable=False)
+    user_id = Column(CHAR(255), nullable=False)
+    task_group = Column(Integer, nullable=False)
+    task_subgroup_code = Column(Integer, nullable=False)
+    insrt_ts = Column(TIMESTAMP, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
+    updt_ts = Column(TIMESTAMP, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
