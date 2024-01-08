@@ -32,9 +32,13 @@ async def F2_client(): # TODO: you need to change when setting server sample scr
             assignment_tbl.take_yn = 'y'
             session.commit()
         else:print("이미 수행된 과제입니다.")
+        async with httpx.AsyncClient() as client:
+            response = await client.post("http://localhost:8005/", json={"assignment_id":assignment_tbl.index})
+        print("POST 요청 응답:", response.json())
         json_data["data"] = data_list
         with open("../F_public/data.json", "w") as file:
             json.dump(json_data, file, default=str)
+        
     return
 
 def F2_run(): # TODO: you need to change when setting server sample script

@@ -29,7 +29,7 @@ def root():
 
 
 @app.post("/")
-async def E1_server(item: Item): # TODO: you need to change when setting server sample script
+async def F1_server(item: Item): # TODO: you need to change when setting server sample script
     if item.device_id == my_device_id:
         with file_lock:
             append_to_file(item.task_subgroup_code)
