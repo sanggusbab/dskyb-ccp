@@ -1,1 +1,15 @@
+<<<<<<< HEAD
 .vscode
+=======
+# ê°ìž ë¡œì»¬?˜ database ? •ë³´ë?? ?‹´ê³? ?žˆ?Š” ?ŒŒ?¼
+secret.py
+
+# dummy file
+test.py
+
+# cache
+__pycache__/
+
+# virtual environment
+venv/
+>>>>>>> practice/network
