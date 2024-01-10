@@ -2,32 +2,42 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import threading
 
+import json
+
 app = FastAPI()
 
-class Item(BaseModel):
-    number: int
+my_device_id = 1
 
-# 파일에 데이터를 추가하는 함수
-def append_to_file(item):
-    with open("../F_public/example.txt", "a") as file: # TODO: you need to change when setting server sample script
-        file.write(str(item.number) + "\n")
-        file.close()
+class Item(BaseModel):
+    device_id: int
+    task_subgroup_code: int
 
 # 파일 접근을 동기화하기 위한 Lock 객체 생성
 file_lock = threading.Lock()
 
+def append_to_file(data):
+    with open("../F_public/data.json", "r") as json_file:
+        json_data = json.load(json_file)
+    json_data['data'].append(data)
+    print(json_data)
+    with open("../F_public/data.json", "w") as file: # TODO: you need to change when setting server sample script
+        json.dump(json_data, file, default=str)
+
+@app.get("/")
+def root():
+    return {"hello this is World Time CRUD API!!!"}
+
+
 @app.post("/")
 async def F1_server(item: Item): # TODO: you need to change when setting server sample script
-    # 파일 접근을 Lock으로 동기화
-    item.number = item.number + 10000 # TODO: you need to change when setting server sample script
-    with file_lock:
-        append_to_file(item)
-    return item
+    if item.device_id == my_device_id:
+        with file_lock:
+            append_to_file(item.task_subgroup_code)
+        return item
 
-def F1_run(): # TODO: you need to change when setting server sample script
+def F1_run():
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8004) # TODO: you need to change when setting server sample script
-
+    uvicorn.run(app, host="0.0.0.0", port=8004)
 
 if __name__ == "__main__":
-    F1_run() # TODO: you need to change when setting server sample script
+    F1_run()

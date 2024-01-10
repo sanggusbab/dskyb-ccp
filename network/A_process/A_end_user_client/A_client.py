@@ -1,18 +1,63 @@
 import httpx
-
-# ë¹„ë™ê¸° í´ë¼ì´ì–¸íŠ¸ ìƒì„±
-async def A_client(num):
+from datetime import datetime
+# ºñµ¿±â Å¬¶óÀÌ¾ğÆ® »ı¼º
+async def A_client(request, location_x, location_y, start_time, user_id, task_id, task_group):
     async with httpx.AsyncClient() as client:
-        # ì„œë²„ì— ë³´ë‚¼ ë°ì´í„° ìƒì„±
-        data = {"number" : num}
+        # ¼­¹ö¿¡ º¸³¾ µ¥ÀÌÅÍ »ı¼º
+        data = {
+            "request": request,
+            "location_x": location_x,
+            "location_y": location_y,
+            "start_time": start_time,
+            "user_id": user_id,
+            "task_id": task_id,
+            "task_group": task_group
+        }
         response = await client.post("http://localhost:8000/", json=data)
-        print("POST ìš”ì²­ ì‘ë‹µ:", response.json())
+        print("POST ¿äÃ» ÀÀ´ä:", response.json())
 
 def A_run():
     import asyncio
     while True:
-        num = input("ìˆ«ìë¥¼ ì…ë ¥í•˜ì„¸ìš”: ") 
-        asyncio.run(A_client(num))
+        print("------------------------")
+        request = input("¸í·ÉÀ» ÀÔ·ÂÇÏ¼¼¿ä: ")
+        location_x = float(input("location_x: "))
+        location_y = float(input("location_y: "))
+        current_time = datetime.now()
+        start_time = current_time.strftime("%Y-%m-%dT%H:%M:%S")
+        user_id = int(input("user_id: "))
+        task_id = int(input("taskÁ¤º¸¸¦ ÀÔ·ÂÇÏ¼¼¿ä: "))
+        task_group = int(input("±×·ì Á¤º¸¸¦ ÀÔ·ÂÇÏ¼¼¿ä: "))
+        asyncio.run(A_client(request, location_x, location_y, start_time, user_id, task_id, task_group))
+
+
+if __name__ == "__main__":
+    A_run()
+import httpx
+
+# ë¹„ë™ê¸? ?´?¼?´?–¸?Š¸ ?ƒ?„±
+async def A_client(request, task_id, task_group):
+    async with httpx.AsyncClient() as client:
+        # ?„œë²„ì— ë³´ë‚¼ ?°?´?„° ?ƒ?„±
+        data = {
+            "request": request,
+            "location_x": 1.0,
+            "location_y": 2.0,
+            "start_time": "2023-12-13T08:30:00",
+            "user_id": 1,
+            "task_id": task_id,
+            "task_group": task_group
+        }
+        response = await client.post("http://localhost:8000/", json=data)
+        print("POST ?š”ì²? ?‘?‹µ:", response.json())
+
+def A_run():
+    import asyncio
+    while True:
+        request = input("ëª…ë ¹?„ ?…? ¥?•˜?„¸?š”: ")
+        task_id = int(input("task? •ë³´ë?? ?…? ¥?•˜?„¸?š”: "))
+        task_group = int(input("ê·¸ë£¹ ? •ë³´ë?? ?…? ¥?•˜?„¸?š”: "))
+        asyncio.run(A_client(request, task_id, task_group))
 
 
 if __name__ == "__main__":
