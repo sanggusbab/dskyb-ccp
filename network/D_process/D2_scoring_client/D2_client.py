@@ -38,11 +38,9 @@ def get_first_entry_from_json():
 
 async def D2_client():
     first_entry = get_first_entry_from_json()
-    if first_entry:
-        print("First entry from data.json:", first_entry)
-    else:
-        print("No entries in data.json. Pause program 5 secs")
-        time.sleep(5)
+    if not first_entry:
+        print("No entries in data.json. Pause program 3 secs")
+        time.sleep(3)
         return None
 
     expected_score, expected_time = calc_expected_spec()
@@ -61,7 +59,6 @@ async def D2_client():
 def D2_run():
     while True:
         asyncio.run(D2_client())
-        time.sleep(0.5)
 
 if __name__ == "__main__":
     D2_run()
