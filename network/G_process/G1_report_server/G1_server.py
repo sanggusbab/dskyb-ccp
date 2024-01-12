@@ -21,13 +21,12 @@ def append_to_file(data):
 
 @app.get("/")
 def root():
-    return {"hello this is World Time CRUD API!!!"}
+    return {"hello this is G1_server!!!"}
 
 
 @app.post("/")
 async def G1_server(item: Item):
-    with file_lock:
-        append_to_file(item.assignment_id)
+    append_to_file(item.assignment_id)
     return item
 
 
