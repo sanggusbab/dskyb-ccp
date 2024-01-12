@@ -1,1 +1,46 @@
-{"data": [11]}
+[
+  {
+    "device_id": 5,
+    "task_subgroup_code": 1
+  },
+  {
+    "device_id": 3,
+    "task_subgroup_code": 2
+  },
+  {
+    "device_id": 6,
+    "task_subgroup_code": 3
+  },
+  {
+    "device_id": 10,
+    "task_subgroup_code": 4
+  },
+  {
+    "device_id": 5,
+    "task_subgroup_code": 5
+  },
+  {
+    "device_id": 5,
+    "task_subgroup_code": 6
+  },
+  {
+    "device_id": 6,
+    "task_subgroup_code": 7
+  },
+  {
+    "device_id": 4,
+    "task_subgroup_code": 8
+  },
+  {
+    "device_id": 14,
+    "task_subgroup_code": 9
+  },
+  {
+    "device_id": 8,
+    "task_subgroup_code": 10
+  },
+  {
+    "device_id": 7,
+    "task_subgroup_code": 11
+  }
+]

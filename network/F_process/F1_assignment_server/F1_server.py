@@ -1,43 +1,51 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-import threading
-
 import json
 
 app = FastAPI()
-
-my_device_id = 1
 
 class Item(BaseModel):
     device_id: int
     task_subgroup_code: int
 
-# 파일 접근을 동기화하기 위한 Lock 객체 생성
-file_lock = threading.Lock()
+def is_duplicate(data, existing_data):
+    for existing_item in existing_data:
+        if existing_item.get("task_subgroup_code") == data.get("task_subgroup_code"):
+            return True
+    return False
 
-def append_to_file(data):
-    with open("../F_public/data.json", "r") as json_file:
-        json_data = json.load(json_file)
-    json_data['data'].append(data)
-    print(json_data)
-    with open("../F_public/data.json", "w") as file: # TODO: you need to change when setting server sample script
-        json.dump(json_data, file, default=str)
+def save_to_json(data):
+    try:
+        existing_data = []
+        try:
+            with open('../F_public/data.json', 'r') as existing_file:
+                existing_data = json.load(existing_file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            pass
+
+        if not is_duplicate(data, existing_data):
+            existing_data.append(data)
+            with open('../F_public/data.json', 'w') as json_file:
+                json.dump(existing_data, json_file, indent=2)
+                json_file.write('\n')
+                return True
+        else:
+            return False
+    except Exception as e:
+        print(f"Error saving to JSON: {e}")
+        return False
 
 @app.get("/")
 def root():
-    return {"hello this is World Time CRUD API!!!"}
+    return {"hello this is F1_server!!!"}
 
-
-@app.post("/")
-async def F1_server(item: Item): # TODO: you need to change when setting server sample script
-    if item.device_id == my_device_id:
-        with file_lock:
-            append_to_file(item.task_subgroup_code)
+@app.post("/request")
+async def F1_server(item: Item):
+    if save_to_json(item.dict()):
         return item
-
-def F1_run():
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8004)
+    else:
+        return False
 
 if __name__ == "__main__":
-    F1_run()
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8004)
