@@ -1,51 +1,132 @@
 .string-sender-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 50%; /* 세로 중앙 정렬을 위해 100vh 사용 */
-    background-color: #fff3f3;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 600px;
-    text-align: center;
-    margin: 10% auto;
-    font-family: Arial, sans-serif;
-  }
-  
-  
-  .header {
-    margin-bottom: 20px;
-  }
-  
-  .team-name {
-    font-size: 36px;
-  }
-  
-  .subheading {
-    font-size: 18px;
-    margin-top: 10px;
-  }
-  
-  input {
-    width: 400px;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .submit-button {
-    background-color: #0073e6;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    padding: 10px 20px;
-    cursor: pointer;
-  }
-  
-  .response-text {
-    margin-top: 20px;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50%;
+  /* 세로 중앙 정렬을 위해 100vh 사용 */
+  background: linear-gradient(135deg, #ffc7c5 0%, #c4ecff 100%);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 800px;
+  text-align: center;
+  margin: 10% auto;
+  font-family: Arial, sans-serif;
+}
+
+.text-box-container {
+  display: flex;
+  justify-content: center;
+  margin: auto;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.styled-input-container {
+  border-radius: 8px;
+  justify-content: left;
+  width: 100%;
+  height: 30px;
+}
+
+.id-label {
+  text-align: left;
+  font-weight: bold;
+  width: 100px;
+  margin-right: 20px;
+}
+.styled-input{
+  width: 400px;
+}
+
+.id-input-label{
+  width: 200px;
+}
+
+.submit-button:hover {
+  background-color: #005bb5; /* Darker color on hover */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+.text-box {
+  background-color: #f9fafb;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* Align items to the left */
+  width: 300px;
+  padding: 0 20px 20px;
+  margin: 10px;
+  border: 1px solid #e1e4e8;
+  background: linear-gradient(135deg, #fff1f1 0%, #ebf9ff 100%);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+.line {
+  width: 300px;
+  font-weight: bold;
+  text-align: center;
+  /* Center align the text */
+  margin-bottom: auto;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+.team-name {
+  font-size: 36px;
+}
+
+.subheading {
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+.input-label {
+  text-align: left;
+  font-size: 14px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input {
+  width: 90%;
+  /* Adjust width to leave space for padding */
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  /* Add some space between inputs */
+}
+
+.submit-button {
+  background-color: #0073e6;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.response-text {
+  margin-top: 20px;
+}
+
+/* Add a new class for the random data button */
+.random-data-button {
+  background-color: #4caf50; /* Choose the color you want */
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+/* Add hover effect for the random data button */
+.random-data-button:hover {
+  background-color: #45a049; /* Darker color on hover */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
