@@ -47,7 +47,6 @@ def get_first_entry_from_json():
             existing_data = json.load(json_file)
             if existing_data:
                 first_entry = existing_data[0]
-                # Remove the first entry from the JSON file
                 remaining_entries = existing_data[1:]
                 with open(json_file_path, 'w') as updated_json_file:
                     json.dump(remaining_entries, updated_json_file, default=str)

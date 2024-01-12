@@ -12,8 +12,8 @@ engine = database.engineconn()
 session = engine.sessionmaker()
 conn = engine.connection()
 
-subgroup_code = 0
-task_id = 0
+subgroup_code = 1
+task_id = 1
 
 def get_first_entry_from_json():
     json_file_path = '../B_public/data.json'
@@ -39,8 +39,8 @@ async def B2_client():
     if first_entry:
         print("First entry from data.json:", first_entry)
     else:
-        print("No entries in data.json. Pause program 5 secs")
-        time.sleep(5)
+        print("No entries in data.json. Pause program 3 secs")
+        time.sleep(3)
         return None
     for i in range(0, 6):
         data_detail = models.SubgroupDetailTbl(
@@ -69,7 +69,7 @@ async def B2_client():
 def B2_run():
     while True:
         asyncio.run(B2_client())
-        time.sleep(0.5)
+        time.sleep(1)
 
 
 if __name__ == "__main__":
