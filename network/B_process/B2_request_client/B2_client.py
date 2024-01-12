@@ -1,59 +1,75 @@
 import httpx
 import json
 import sys, os
+import time
+import asyncio
 
-#다른 폴더로 분리한 파일 가져오기위함.
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from B_public import database
 from B_public import models
 
-#기본세팅
 engine = database.engineconn()
 session = engine.sessionmaker()
 conn = engine.connection()
 
 subgroup_code = 0
+task_id = 0
 
-def parse(request):
-    requests = request.split(",")
-    motion = ["Takeoff","Landing","ForwardFlight","BackwardFlight","SidewaysMovement","Ascend","Descend","Rotation","Hovering","SpeedAdjustment","AltitudeHolding","ReturntoHome","Pathfinding","Post-MissionHolding","ObjectTracking"]
-    result_ids = []
-    for action in requests:
-        if action in motion:
-            action_id = motion.index(action)+1
-            result_ids.append(action_id)
-    return result_ids
+def get_first_entry_from_json():
+    json_file_path = '../B_public/data.json'
+    try:
+        with open(json_file_path, 'r') as json_file:
+            existing_data = json.load(json_file)
+            if existing_data:
+                first_entry = existing_data[0]
+                # Remove the first entry from the JSON file
+                remaining_entries = existing_data[1:]
+                with open(json_file_path, 'w') as updated_json_file:
+                    json.dump(remaining_entries, updated_json_file, default=str)
+                return first_entry
+            else:
+                return None  # Return None if the file is empty
+    except (FileNotFoundError, json.JSONDecodeError, IndexError):
+        return None
 
 async def B2_client():
-    with open("../B_public/data.json", "r") as json_file:
-        json_data = json.load(json_file)
-    data_list = json_data["data"]
-    if not len(data_list) == 0:
-        data = data_list.pop(0)
-        global subgroup_code
-        subgroup_code+= 1
-        motion_codes = parse(data["request"])
-        for i, code in enumerate(motion_codes):
-            print(code)
-            subgroup_detail_data= {"task_subgroup_code": subgroup_code}
-            data_detail = models.SubgroupDetailTbl(task_subgroup_code = subgroup_code, location_x = data["location_x"], location_y = data["location_y"], motion_code = code, sequence =i+1, requested_start_time=data["start_time"])
-            session.add(data_detail)
-        async with httpx.AsyncClient() as client:
-            response = await client.post("http://localhost:8001/request", json=subgroup_detail_data)
-            print("POST 요청 응답:", response.json())
-        subgroup_info_data=models.SubgroupInfoTbl(task_id  = data["task_id"], task_group = data["task_group"], task_subgroup_code = subgroup_code, user_id = data["user_id"])
-        session.add(subgroup_info_data)
+    global subgroup_code
+    global task_id
+    first_entry = get_first_entry_from_json()
+    if first_entry:
+        print("First entry from data.json:", first_entry)
+    else:
+        print("No entries in data.json. Pause program 5 secs")
+        time.sleep(5)
+        return None
+    for i in range(0, 6):
+        data_detail = models.SubgroupDetailTbl(
+            task_subgroup_code = subgroup_code + int(i/3),
+            location_x = first_entry[f"Location{int(i/3)+1}_x"],
+            location_y = first_entry[f"Location{int(i/3)+1}_y"],
+            motion_code = i % 3 +1, # Moveto, Landing, Takeoff
+            sequence = i,
+            requested_start_time=first_entry["currentTime"])
+        session.add(data_detail)
+        if int(i%3) ==0:
+            async with httpx.AsyncClient() as client:
+                response = await client.post("http://localhost:8001/request", json={"task_subgroup_code": subgroup_code + int(i/3)})
+                print("Response:", response.json())
+            subgroup_info_data=models.SubgroupInfoTbl(
+                task_id=task_id,
+                task_group=task_id,
+                task_subgroup_code=subgroup_code + int(i/3),
+                user_id=first_entry["userId"])
+            session.add(subgroup_info_data)
         session.commit()
-        json_data["data"] = data_list
-        with open("../B_public/data.json", "w") as file:
-            json.dump(json_data, file, default=str)
+    subgroup_code = subgroup_code + 2
+    task_id = task_id +1
     return
 
-
 def B2_run():
-    import asyncio
     while True:
         asyncio.run(B2_client())
+        time.sleep(0.5)
 
 
 if __name__ == "__main__":

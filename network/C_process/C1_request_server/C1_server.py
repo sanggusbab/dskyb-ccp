@@ -6,36 +6,34 @@ import json
 
 app = FastAPI()
 
+def save_to_json(data):
+    try:
+        existing_data = []
+        try:
+            with open('../C_public/data.json', 'r') as existing_file:
+                existing_data = json.load(existing_file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            pass
+        existing_data.append(data)
+        with open('../C_public/data.json', 'w') as json_file:
+            json.dump(existing_data, json_file, indent=2)
+            json_file.write('\n')
+    except Exception as e:
+        print(f"Error saving to JSON: {e}")
+
 class Item(BaseModel):
     task_subgroup_code: int
 
-# 파일 접근을 동기화하기 위한 Lock 객체 생성
-file_lock = threading.Lock()
-
-# 파일에 데이터를 추가하는 함수
-def append_to_file(data):
-    with open("../C_public/data.json", "r") as json_file:
-        json_data = json.load(json_file)
-    json_data['data'].append(data)
-    print(json_data)
-    with open("../C_public/data.json", "w") as file: # TODO: you need to change when setting server sample script
-        json.dump(json_data, file, default=str)
-
-
-@app.get("/", description="This is World Time CRUD API")
+@app.get("/")
 def root():
-    return {"hello this is World Time CRUD API!!!"}
+    return {"hello this is C1_server!!!"}
 
 
 @app.post("/request")
-async def C1_server(item: Item): # TODO: you need to change when setting server sample script
-    append_to_file(item.task_subgroup_code)
+async def C1_server(item: Item):
+    save_to_json(item.task_subgroup_code)
     return item
 
-
-def C1_run(): # TODO: you need to change when setting server sample script
-    import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8001) # TODO: you need to change when setting server sample script
-
 if __name__ == "__main__":
-    C1_run() # TODO: you need to change when setting server sample script
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8001)

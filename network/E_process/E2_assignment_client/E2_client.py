@@ -1,55 +1,79 @@
 import httpx
 import json
 import sys, os
+import time
+import asyncio
 
-#다른 폴더로 분리한 파일 가져오기위함.
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from E_public import database
 from E_public import models
 
-#기본세팅
 engine = database.engineconn()
 session = engine.sessionmaker()
 conn = engine.connection()
 
-
-#서버가 음 스코어들이 이렇게나왔으니
-#이 디바이스는 이 태스크 이 디바이스는 이 태스크를 수행하렴 하고 시키는것
-#D2에서 타임, 스코어, 태스크 주면 E1에서 디바이스에 할당하도록 할까요?
-
-def assign(score, time, task, device):
-    return task, device
-
-# 비동기 클라이언트 생성
-async def E2_client(): # TODO: you need to change when setting server sample script
-    with open("../E_public/data.json", "r") as json_file:
-        json_data = json.load(json_file)
-    data_list = json_data["data"]
-    if not len(data_list) == 0:
-        request_id = data_list.pop(0)
-        print(request_id)
-        score_tbl = session.query(models.score_tbl).filter(models.score_tbl.request_id == request_id).first()
-        request_queue_tbl = session.query(models.score_request_queue_tbl).filter(models.score_request_queue_tbl.request_id == request_id).first()
+def assign(score_tbl_list, score_request_queue_list):
+    score = 0
+    index = 0
+    for i, score_tbl in enumerate(score_tbl_list):
         print(score_tbl.expected_score)
-        subgroup_code, device_id = assign(score_tbl.expected_score, score_tbl.expected_time, request_queue_tbl.task_subgroup_code, request_queue_tbl.device_id)
-        datas = models.assignment_tbl(
-        device_id = device_id, task_subgroup_code = subgroup_code, take_yn = 'n'
+        if score <= score_tbl.expected_score:
+            score = score_tbl.expected_score
+            index = i
+    return score_request_queue_list[index].task_subgroup_code, score_request_queue_list[index].device_id
+
+def get_first_entry_from_json():
+    json_file_path = '../E_public/data.json'
+    try:
+        with open(json_file_path, 'r') as json_file:
+            existing_data = json.load(json_file)
+            if existing_data:
+                first_entry = existing_data[0]
+                # Remove the first entry from the JSON file
+                remaining_entries = existing_data[1:]
+                with open(json_file_path, 'w') as updated_json_file:
+                    json.dump(remaining_entries, updated_json_file, default=str)
+                return first_entry
+            else:
+                return None  # Return None if the file is empty
+    except (FileNotFoundError, json.JSONDecodeError, IndexError):
+        return None
+
+async def E2_client():
+    first_entry = get_first_entry_from_json()
+    if not first_entry:
+        print("No entries in data.json. Pause program 5 secs")
+        time.sleep(5)
+        return None
+    time.sleep(10)
+    task_subgroup_code = session.query(models.score_request_queue_tbl).filter(models.score_request_queue_tbl.request_id == first_entry).first().task_subgroup_code
+    score_request_queue_list = session.query(models.score_request_queue_tbl).filter(models.score_request_queue_tbl.task_subgroup_code == task_subgroup_code).all()
+    score_tbl_list = []
+    for score_request in score_request_queue_list:
+        score_tbl_list.extend(
+            session.query(models.score_tbl).filter(
+                models.score_tbl.request_id == score_request.request_id
+            ).all()
         )
+    for i in range(len(score_tbl_list)-1):
+        get_first_entry_from_json()
+    subgroup_code, device_id = assign(score_tbl_list, score_request_queue_list)
+    datas = models.assignment_tbl(
+        device_id=device_id,
+        task_subgroup_code=subgroup_code,
+        take_yn='n'
+    )
+    async with httpx.AsyncClient() as client:
+        response = await client.post("http://localhost:8004/request", json={"device_id":device_id, "task_subgroup_code": subgroup_code})
+    if response.json() != False:
+        print("Response:", response.json())
         session.add(datas)
         session.commit()
-        async with httpx.AsyncClient() as client:
-            response = await client.post("http://localhost:8004/", json={"device_id":device_id, "task_subgroup_code": subgroup_code})
-        print("POST 요청 응답:", response.json())
-        json_data["data"] = data_list
-        with open("../E_public/data.json", "w") as file:
-            json.dump(json_data, file, default=str)
     return
 
-def E2_run(): # TODO: you need to change when setting server sample script
-    import asyncio
+def E2_run():
     while True:
-        asyncio.run(E2_client()) # TODO: you need to change when setting server sample script
-
+        asyncio.run(E2_client())
 
 if __name__ == "__main__":
-    E2_run() # TODO: you need to change when setting server sample script
+    E2_run()
