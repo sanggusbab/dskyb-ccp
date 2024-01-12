@@ -1,7 +1,5 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-import threading
-
 import json
 
 app = FastAPI()
@@ -9,34 +7,30 @@ app = FastAPI()
 class Item(BaseModel):
     request_id: int
 
-
-# 파일 접근을 동기화하기 위한 Lock 객체 생성
-file_lock = threading.Lock()
-
-# 파일에 데이터를 추가하는 함수
-def append_to_file(data):
-    with open("../E_public/data.json", "r") as json_file:
-        json_data = json.load(json_file)
-    json_data['data'].append(data)
-    print(json_data)
-    with open("../E_public/data.json", "w") as file: # TODO: you need to change when setting server sample script
-        json.dump(json_data, file, default=str)
+def save_to_json(data):
+    try:
+        existing_data = []
+        try:
+            with open('../E_public/data.json', 'r') as existing_file:
+                existing_data = json.load(existing_file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            pass
+        existing_data.append(data)
+        with open('../E_public/data.json', 'w') as json_file:
+            json.dump(existing_data, json_file, indent=2)
+            json_file.write('\n')
+    except Exception as e:
+        print(f"Error saving to JSON: {e}")
 
 @app.get("/")
 def root():
-    return {"hello this is World Time CRUD API!!!"}
+    return {"hello this is E1_server!!!"}
 
-@app.post("/")
-async def E1_server(item: Item): # TODO: you need to change when setting server sample script
-    with file_lock:
-        append_to_file(item.request_id)
+@app.post("/request")
+async def E1_server(item: Item):
+    save_to_json(item.request_id)
     return item
 
-
-def E1_run(): # TODO: you need to change when setting server sample script
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8003) # TODO: you need to change when setting server sample script
-
-
 if __name__ == "__main__":
-    E1_run() # TODO: you need to change when setting server sample script
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8003)
