@@ -38,16 +38,35 @@ def get_first_entry_from_json():
                 return None  # Return None if the file is empty
     except (FileNotFoundError, json.JSONDecodeError, IndexError):
         return None
-
+    
 async def E2_client():
     first_entry = get_first_entry_from_json()
     if not first_entry:
-        print("No entries in data.json. Pause program 5 secs")
-        time.sleep(5)
+        print("No entries in data.json. Pause program 3 secs")
+        time.sleep(3)
         return None
-    time.sleep(10)
-    task_subgroup_code = session.query(models.score_request_queue_tbl).filter(models.score_request_queue_tbl.request_id == first_entry).first().task_subgroup_code
-    score_request_queue_list = session.query(models.score_request_queue_tbl).filter(models.score_request_queue_tbl.task_subgroup_code == task_subgroup_code).all()
+
+    score_request_queue = session.query(models.score_request_queue_tbl).filter(models.score_request_queue_tbl.request_id == first_entry).first()
+    if score_request_queue is None:
+        print("No score_request_queue found. Pause program 3 secs")
+        time.sleep(3)
+        return None
+
+    if score_request_queue.task_subgroup_code % 2 == 0:
+        score_request_queue_list = session.query(models.score_request_queue_tbl).filter(models.score_request_queue_tbl.task_subgroup_code == score_request_queue.task_subgroup_code).all()
+        score_tbl_list = []
+        for score_request in score_request_queue_list:
+            score_tbl_list.extend(
+                session.query(models.score_tbl).filter(
+                    models.score_tbl.request_id == score_request.request_id
+                ).all()
+            )
+        for i in range(len(score_tbl_list)-1):
+            get_first_entry_from_json()
+        return
+
+    time.sleep(8)
+    score_request_queue_list = session.query(models.score_request_queue_tbl).filter(models.score_request_queue_tbl.task_subgroup_code == score_request_queue.task_subgroup_code).all()
     score_tbl_list = []
     for score_request in score_request_queue_list:
         score_tbl_list.extend(
