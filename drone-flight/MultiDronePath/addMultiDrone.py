@@ -1,13 +1,14 @@
+import sys
+import os
+current_script_path = os.path.abspath(__file__)
+upper_folder_path = os.path.dirname(os.path.dirname(current_script_path))
+sys.path.append(upper_folder_path)
 import airsim
-
-# AirSim 연결
+import time
 client = airsim.MultirotorClient()
 client.confirmConnection()
 
-#드론 초기 위치 지정
 pose = airsim.Pose(airsim.Vector3r(x_val=3, y_val=3, z_val=0), airsim.to_quaternion(0, 0, 0))
-
-# 드론 추가 및 제어
 
 for i in range(3):
     
