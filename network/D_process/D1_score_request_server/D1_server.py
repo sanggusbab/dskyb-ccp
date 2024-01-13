@@ -13,9 +13,9 @@ def save_to_json(data):
         try:
             with open('../D_public/data.json', 'r') as existing_file:
                 existing_data = json.load(existing_file)
+                existing_data.append(data)
         except (FileNotFoundError, json.JSONDecodeError):
             pass
-        existing_data.append(data)
         with open('../D_public/data.json', 'w') as json_file:
             json.dump(existing_data, json_file, indent=2)
             json_file.write('\n')

@@ -22,15 +22,10 @@ def save_to_json(data):
                 existing_data = json.load(existing_file)
         except (FileNotFoundError, json.JSONDecodeError):
             pass
-
-        # Convert Item instance to dictionary
-        data_dict = data.dict()
-
-        # Check for duplicate task_subgroup_code
-        if is_duplicate(data_dict, existing_data):
+        if is_duplicate(data, existing_data):
             return False
 
-        existing_data.append(data_dict)
+        existing_data.append(data)
         with open('../F_public/data.json', 'w') as json_file:
             json.dump(existing_data, json_file, indent=2)
             json_file.write('\n')
@@ -46,7 +41,7 @@ def root():
 
 @app.post("/request")
 async def F1_server(item: Item):
-    if save_to_json(item):
+    if save_to_json(item.dict()):
         return item
     else:
         return False

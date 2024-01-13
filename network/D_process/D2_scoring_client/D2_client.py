@@ -26,7 +26,6 @@ def get_first_entry_from_json():
             existing_data = json.load(json_file)
             if existing_data:
                 first_entry = existing_data[0]
-                # Remove the first entry from the JSON file
                 remaining_entries = existing_data[1:]
                 with open(json_file_path, 'w') as updated_json_file:
                     json.dump(remaining_entries, updated_json_file, default=str)
@@ -42,7 +41,6 @@ async def D2_client():
         print("No entries in data.json. Pause program 3 secs")
         time.sleep(3)
         return None
-
     expected_score, expected_time = calc_expected_spec()
     score_data = models.score_tbl(
         expected_score = expected_score,
@@ -52,7 +50,7 @@ async def D2_client():
     session.add(score_data)
     session.commit()
     async with httpx.AsyncClient() as client:
-        response = await client.post("http://localhost:8003/request", json={"request_id":first_entry})
+        response = await client.post("http://localhost:8003/request", json={"request_id":int(first_entry)})
     print("Response:", response.json())
     return
 

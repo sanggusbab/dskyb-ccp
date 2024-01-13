@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import threading
-
+file_lock = threading.Lock()
 import json
 
 app = FastAPI()
@@ -26,7 +26,8 @@ def root():
 
 @app.post("/")
 async def G1_server(item: Item):
-    append_to_file(item.assignment_id)
+    with file_lock:
+        append_to_file(item.assignment_id)
     return item
 
 

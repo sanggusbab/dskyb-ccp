@@ -82,12 +82,12 @@ async def E2_client():
         task_subgroup_code=subgroup_code,
         take_yn='n'
     )
+    session.add(datas)
+    session.commit()
     async with httpx.AsyncClient() as client:
         response = await client.post("http://localhost:8004/request", json={"device_id":device_id, "task_subgroup_code": subgroup_code})
-    if response.json() != False:
-        print("Response:", response.json())
-        session.add(datas)
-        session.commit()
+        if response.json() != False:
+            print("Response:", response.json())
     return
 
 def E2_run():

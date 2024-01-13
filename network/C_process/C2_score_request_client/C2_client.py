@@ -71,14 +71,12 @@ async def C2_client():
         task[task_data.motion_code]=[task_data.location_x, task_data.location_y]
     device = get_device_info()
     available_edge = is_available(device, task)
-    print(available_edge)
 
     for i in available_edge:
         data_detail = models.ScoreRequestQueueTbl(task_subgroup_code = first_entry, device_id = i)
         session.add(data_detail)
         session.commit()
         id = session.query(models.ScoreRequestQueueTbl).filter((models.ScoreRequestQueueTbl.task_subgroup_code == first_entry)&(models.ScoreRequestQueueTbl.device_id == i)).first().request_id
-        print(id)
 
         async with httpx.AsyncClient() as client:
             response = await client.post("http://localhost:8002/request", json={"request_id": id})

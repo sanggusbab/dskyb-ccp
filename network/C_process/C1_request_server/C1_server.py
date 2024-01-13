@@ -1,9 +1,11 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-
 import json
 
 app = FastAPI()
+
+class Item(BaseModel):
+    task_subgroup_code: int
 
 def save_to_json(data):
     try:
@@ -20,13 +22,9 @@ def save_to_json(data):
     except Exception as e:
         print(f"Error saving to JSON: {e}")
 
-class Item(BaseModel):
-    task_subgroup_code: int
-
 @app.get("/")
 def root():
     return {"hello this is C1_server!!!"}
-
 
 @app.post("/request")
 async def C1_server(item: Item):
