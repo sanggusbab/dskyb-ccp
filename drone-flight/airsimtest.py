@@ -1,88 +1,111 @@
 import airsim
-import numpy as np
-import os
-import pprint
 from setuptools import setup
-import tempfile
-import sys
-import time
-import threading
-
-sys.path.append(os.path.join(os.path.abspath(os.path.split(__file__)[0])))
+import asyncio
 
 client = airsim.MultirotorClient()
 client.confirmConnection()
-client.enableApiControl(True)
-client.armDisarm(True)
 
-#obstacle detection
+#dlrj cnrkgka
+def init():
+    dname = client.listVehicles()
+    for drone in dname:
+        client.enableApiControl(is_enabled=True, vehicle_name=drone)
+        client.armDisarm(arm=True, vehicle_name=drone)
+        
 
-
-def check_stop_key():
+def select_drone():
+    droneList = client.listVehicles()
+    idx = 0
+    for drone in droneList:
+        print(f'{idx}th drone: {drone}')
+        idx = idx +1
     while True:
-        stop = input("Press 's' to stop moving: ")
-        if stop == 's':
-            client.hoverAsync().join()
-            break
-time.sleep(0.1)
+        try:
+            drone_index = int(input("Choose a drone:"))
+            if 0 <= drone_index < len(droneList):
+                drone = droneList[drone_index]
+                print(drone)
+                return drone
+            else:
+                print("Invalid input. Please enter a number within the range.")
+        except ValueError:
+            print("Invalid input. Please enter a number.")
 
-def move_drone():
-    x = float(input("x-coordinate of the destination (forward is positive): "))
-    y = float(input("y-coordinate of the destination (right is positive): "))
-    z = -float(input("z-coordinate of the destination (upward is positive): "))
-    
-    stop_thread = threading.Thread(target=check_stop_key)
-    stop_thread.start()
-    
-    client.moveToPositionAsync(x, y, z, 5).join()
-
-    #images = get_drone_images()
-    
-    #if detect_obstacles(images):
-        #print("Obstacle detected!")
-        #avoid_obstacles()
-    stop_thread.join()
-
-def game():
-    while True:        
-        str = input('Please enter the command: ')
-        if str == 'quit':
-            break
-
-        elif str == 'takeoff':
-            client.takeoffAsync().join()
-            move = input('Move or not?')
-            if move.lower() in ['m', 'y']:
-                move_drone()
-                time.sleep(0.1)
-                initializing_part()
-                
-        elif str == 'landing':
-            print("Landing...")
-            client.landAsync().join()
-
-    print('Game finished')
-
-def initializing_part():
-    pose = client.simGetVehiclePose()
+def show_pos(vehicle_name):
+    pose = client.simGetVehiclePose(vehicle_name)
     print("Drone's current position:")
     print("x: ", pose.position.x_val)
     print("y: ", pose.position.y_val)
-    print("z: ", pose.position.z_val)
-    
-    cntr = input('Do you want to start program?: s, y: start || q, n: quit)')
-    return cntr
+    print("z: ", pose.position.z_val)       
 
-while True:
-    cntr = initializing_part()
-    if cntr.lower() in ['s', 'y']:
+def start_program():
+    start = input('Do you want to start program?: start)')
+    if start == 'start':
         game()
-    elif cntr.lower() in ['q', 'n']:
-        break
-    else:
-        pass
 
-print()
-client.armDisarm(False)
-client.enableApiControl(False)
+#delete
+async def check_stop_key(vehicle_name):
+    while True:
+        stop = input("Press 's' to stop moving: ")
+        if stop == 's':
+            client.hoverAsync(vehicle_name=vehicle_name)
+            break
+
+async def move_drone():
+    vehicle_name=select_drone()
+    x = float(input("x-coordinate: "))
+    y = float(input("y-coordinate: "))
+    z = -float(input("z-coordinate: "))
+    
+    client.moveToPositionAsync(x=x, y=y, z=z, velocity=5.0, vehicle_name=vehicle_name)
+
+
+def addDrone():
+    droneName = input("New drone name: ")
+    for drone in client.listVehicles():
+        if drone == droneName:
+            return 0
+        
+    x = float(input("x-coordinate: "))
+    y = float(input("y-coordinate: "))
+    z = -float(input("z-coordinate: "))
+    
+    pose = airsim.Pose(airsim.Vector3r(x_val=x, y_val=y, z_val=z), airsim.to_quaternion(0, 0, 0))
+    client.simAddVehicle(vehicle_name=droneName, vehicle_type="simpleflight", pose=pose)
+    client.enableApiControl(is_enabled=True, vehicle_name=droneName)
+    client.armDisarm(arm=True, vehicle_name=droneName)
+    client.takeoffAsync(timeout_sec=10.0, vehicle_name=droneName)
+
+def takeoff():
+    print("TAKEOFF MODE")
+    client.takeoffAsync(10.0, select_drone())
+
+def landing():
+    vehicle_name = select_drone()
+    landed = client.getMultirotorState(vehicle_name=vehicle_name).landed_state
+    if landed == airsim.LandedState.Landed:
+        print("already landed...")
+    else:
+        print("landing...")
+        client.landAsync(vehicle_name=vehicle_name)
+async def game():
+    init()
+    while True:
+        str = input('Please enter the command(quit/takeoff/landing/move/add/show): ')
+        if str == 'quit':
+            break
+        elif str == 'takeoff':
+            takeoff()
+        elif str =='move':
+            await move_drone()
+        elif str == 'landing':
+            landing()
+        elif str == 'add':
+            addDrone()
+        elif str =='show':
+            show_pos(select_drone())
+        else:
+            pass
+
+asyncio.run(game())
 print('Program quit')
